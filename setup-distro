@@ -1,0 +1,32 @@
+#!/data/data/com.termux/files/usr/bin/sh
+
+# fix /data mount options
+mount -o remount,dev,suid /data
+
+DISTRO_DIR=$1
+DISTRO_NAME=$2
+
+if [ -z "${DISTRO_DIR}" ] || [ -z "${DISTRO_NAME}" ]; then
+	exit 1
+fi
+
+if [ ! -f "${DISTRO_NAME}.lock" ]
+then
+	touch "${DISTRO_NAME}.lock"
+	mount -t proc /proc "${DISTRO_DIR}/proc"
+	busybox mount --rbind /sys "${DISTRO_DIR}/sys"
+	busybox mount --make-rslave "${DISTRO_DIR}/sys"
+	busybox mount --rbind /dev "${DISTRO_DIR}/dev"
+	busybox mount --make-rslave "${DISTRO_DIR}/dev"
+	umount "${DISTRO_DIR}/sys/fs/selinux"
+	#mount --bind /sys "${DISTRO_DIR}/sys"
+	#mount --bind /dev "${DISTRO_DIR}/dev"
+	#mount --bind /dev/pts "${DISTRO_DIR}/dev/pts"
+	mount -t devpts devpts "${DISTRO_DIR}/dev/pts"
+	mkdir -p "${DISTRO_DIR}/dev/shm"
+	mount -t tmpfs -o mode=1777,nosuid,nodev shm "${DISTRO_DIR}/dev/shm"
+	mount -t tmpfs -o mode=1777,nodev,nosuid tmp "${DISTRO_DIR}/tmp"
+	mount -t tmpfs -o nosuid,nodev,mode=0755 run "${DISTRO_DIR}/run"
+else
+	echo already mounted!
+fi

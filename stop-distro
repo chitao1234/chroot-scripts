@@ -1,0 +1,17 @@
+#!/data/data/com.termux/files/usr/bin/sh
+
+DISTRO_DIR=$1
+DISTRO_NAME=$2
+
+if [ -z "${DISTRO_DIR}" ] || [ -z "${DISTRO_NAME}" ]; then
+	exit 1
+fi
+
+umount "${DISTRO_DIR}/run"
+umount "${DISTRO_DIR}/tmp"
+#umount "${DISTRO_DIR}/dev/shm"
+#umount "${DISTRO_DIR}/dev/pts"
+umount -R "${DISTRO_DIR}/dev"
+umount -R "${DISTRO_DIR}/sys"
+umount "${DISTRO_DIR}/proc"
+rm "${DISTRO_NAME}.lock"

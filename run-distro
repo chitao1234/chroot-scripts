@@ -1,0 +1,17 @@
+#!/data/data/com.termux/files/usr/bin/sh
+
+DISTRO_DIR=$1
+DISTRO_NAME=$2
+
+if [ -z "${DISTRO_DIR}" ] || [ -z "${DISTRO_NAME}" ]; then
+	exit 1
+fi
+
+# disable termux-exec
+unset LD_PRELOAD
+
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+export TERM=$TERM
+export TMPDIR=/tmp
+
+chroot "${DISTRO_DIR}" /bin/su - chi
