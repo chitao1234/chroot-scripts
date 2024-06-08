@@ -10,7 +10,7 @@ if [ -z "${DISTRO_DIR}" ] || [ -z "${DISTRO_NAME}" ]; then
 	exit 1
 fi
 
-if [ ! -f "${DISTRO_NAME}.lock" ]
+if [ ! -f "${DISTRO_NAME}.lock" ] || ! findmnt "${DISTRO_DIR}/tmp" > /dev/null
 then
 	touch "${DISTRO_NAME}.lock"
 	mount -t proc /proc "${DISTRO_DIR}/proc"
